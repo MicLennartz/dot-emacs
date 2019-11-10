@@ -1,13 +1,13 @@
 #+STARTUP: overview
-#+TITLE: Uncle Dave's Emacs
-#+CREATOR: Dawid 'daedreth' Eckert
+#+TITLE: Micl's Emacs
+#+CREATOR: Michael Lennartz (inspired by Uncle Dave’s Emacs)
 #+LANGUAGE: en
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 [[./img/screen.png]]
 * Installation
 ** Quick Installation
-=git clone https://github.com/daedreth/UncleDavesEmacs ~/.emacs.d=
+=git clone https://github.com/MicLennartz/dot-emacs.git ~/.emacs.d=
 
 Keep in mind that you should remove your own ~/.emacs and your ~/.emacs.d
 prior to cloning this configuration. The next time you launch Emacs (and I recommend
@@ -39,13 +39,19 @@ Have some fun with it, add your own keybindings, change parameters, it's your ed
 
 *** pip
 - =pip install jedi flake8 autopep8=, here, a one line install.
-
+** Org / Babel
+*** Package manager
+*** pip
+- =ansible=, for ob-ansible
+- =junos-eznc=, for junos-mode
 * Some notes
 ** On use-package some more
 We utilize use-package to handle downloading and configuring other packages painlessly.
 With =init.el= written the way it is, emacs checks for the presence of =use-package=
 on launch and downloads it and installs if necessary.
 =el-Get= is too old and not configurable enough.
+
+To support package installations from e.g. GitHub, the =straight.el= package manager is added to use-package.
 
 ** On the format of the configuration
 As you may have noticed, as you scroll down my bit of prose, this is the configuration file itself.
