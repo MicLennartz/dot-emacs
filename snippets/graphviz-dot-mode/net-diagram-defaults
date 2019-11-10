@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: dot-network-diagram-defaults
+# key: netdia
+# --
+digraph {
+graph [ pad="0.5"; ranksep="1"; nodesep="1.5"; fontcolor=white;     bgcolor="transparent"; rankdir=TB ];
+node [color=grey; fontcolor=white; fontname="Helvetica"; shape=box; style="rounded,filled" ; fillcolor="#006699"];
+edge [arrowhead=none; color=grey; fontname="Helvetica"; fontcolor=white; fontsize=10];
+splines=line;
+
+$0
+}

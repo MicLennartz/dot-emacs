@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: add-cluster
+# key: cluster
+# --
+subgraph {
+		style="rounded,filled";
+		color=grey50;
+		label = "$1";
+		$2
+	}
+

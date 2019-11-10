@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: wsk
+# key: wsk
+# --
+** TODO $2                                                          :drill:
+   ** Solution
+   - $1
+$0

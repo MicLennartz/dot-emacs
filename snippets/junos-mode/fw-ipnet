@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: fw-ipnet
+# key: fw-ipnet
+# --
+set cli confirmation-prompt off
+set cli config-output-format set
+configure
+set network virtual-router GGN-INT-VR protocol bgp policy export rules ADV_TO_ALL_GGN_TRANSIT_VPNS match address-prefix $1 exact yes
+set network virtual-router GGN-INT-VR routing-table ip static-route ${1:$(replace-regexp-in-string "/" "_" yas-text)} nexthop ip-address ${2:\{\{nextHop\}\}}
+set network virtual-router GGN-INT-VR routing-table ip static-route ${1:$(replace-regexp-in-string "/" "_" yas-text)} metric 10
+set network virtual-router GGN-INT-VR routing-table ip static-route ${1:$(replace-regexp-in-string "/" "_" yas-text)} destination ${1:\{\{network/cidr\}\}}
+set address N_${1:$(replace-regexp-in-string "/" "_" yas-text)} tag ${3:\{\{zoneName\}\}} ip-netmask $1
+commit

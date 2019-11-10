@@ -1,0 +1,135 @@
+# -*- mode: snippet -*-
+# name: Create E2C POD 48S/T config
+# key: e2c-48s
+# --
+MC-AE switch (48S/T) base config
+
+fields:
+
+uplinkDescription:  ${1:\{\{uplinkDescription\}\}}     ;; Description of swtich uplink AE
+swLacpSystemId:     ${2:\{\{swLacpSystemId\}\}}        ;; Chassis MAC address of primary switch
+l2Domain:           ${3:\{\{l2Domain\}\}}              ;; L2-Domain-name
+MgtIp1:             ${4:\{\{MgtIp1\}\}}                ;; Mgmt IP of 1st switch
+MgtIp2:             ${5:\{\{MgtIp2\}\}}                ;; Mgmt IP of 2nd switch
+
+
+switch 1:
+---------
+
+delete vlans
+wildcard range delete interfaces et-0/0/[50-53]
+wildcard range delete interfaces xe-0/0/[0-47]
+wildcard range delete interfaces ge-0/0/[0-47]
+set system commit synchronize
+set switch-options service-id 4092
+set chassis aggregated-devices ethernet device-count 54
+set chassis redundancy graceful-switchover
+set routing-options nonstop-routing
+set protocols layer2-control nonstop-bridging
+set multicast-snooping-options multichassis-lag-replicate-state
+
+set interfaces ae0 description ICP-PL
+set interfaces ae0 mtu 9192
+set interfaces ae0 aggregated-ether-options minimum-links 1
+set interfaces ae0 aggregated-ether-options link-speed 40g
+set interfaces ae0 aggregated-ether-options lacp active
+set interfaces ae0 aggregated-ether-options lacp periodic slow
+set interfaces ae0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae0 unit 0 family ethernet-switching vlan members 1-4092
+set interfaces et-0/0/50 ether-options 802.3ad ae0
+set interfaces et-0/0/51 ether-options 802.3ad ae0
+set interfaces irb unit 4092 family inet address 169.254.254.254/31
+
+set interfaces ae1 description $1
+set interfaces ae1 mtu 9192
+set interfaces ae1 aggregated-ether-options minimum-links 1
+set interfaces ae1 aggregated-ether-options link-speed 40g
+set interfaces ae1 aggregated-ether-options lacp active
+set interfaces ae1 aggregated-ether-options lacp periodic slow
+set interfaces ae1 aggregated-ether-options lacp system-id $2
+set interfaces ae1 aggregated-ether-options lacp admin-key 1
+set interfaces ae1 aggregated-ether-options mc-ae mc-ae-id 1
+set interfaces ae1 aggregated-ether-options mc-ae chassis-id 0
+set interfaces ae1 aggregated-ether-options mc-ae mode active-active
+set interfaces ae1 aggregated-ether-options mc-ae status-control active
+set interfaces ae1 aggregated-ether-options mc-ae events iccp-peer-down prefer-status-control-active
+set interfaces ae1 aggregated-ether-options mc-ae init-delay-time 240
+set interfaces ae1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae1 unit 0 family ethernet-switching vlan members 1-4091
+set interfaces et-0/0/52 ether-options 802.3ad ae1
+set interfaces et-0/0/53 ether-options 802.3ad ae1
+
+set protocols iccp local-ip-addr 169.254.254.254
+set protocols iccp peer 169.254.254.255 session-establishment-hold-time 50
+set protocols iccp peer 169.254.254.255 backup-liveness-detection backup-peer-ip $5
+set protocols iccp peer 169.254.254.255 liveness-detection minimum-receive-interval 3000
+set protocols iccp peer 169.254.254.255 liveness-detection transmit-interval minimum-interval 3000
+set multi-chassis multi-chassis-protection 169.254.254.255 interface ae0
+set protocols mstp configuration-name $3
+set protocols mstp revision-level 0
+set protocols mstp system-identifier $2
+set protocols mstp bridge-priority 12k
+set protocols mstp bpdu-block-on-edge
+set vlans ICCP vlan-id 4092
+set vlans ICCP l3-interface irb.4092
+
+
+switch 2:
+----------
+
+delete vlans
+wildcard range delete interfaces et-0/0/[50-53]
+wildcard range delete interfaces xe-0/0/[0-47]
+wildcard range delete interfaces ge-0/0/[0-47]
+set system commit synchronize
+set switch-options service-id 4092
+set chassis aggregated-devices ethernet device-count 54
+set chassis redundancy graceful-switchover
+set routing-options nonstop-routing
+set protocols layer2-control nonstop-bridging
+set multicast-snooping-options multichassis-lag-replicate-state
+
+set interfaces ae0 description ICP-PL
+set interfaces ae0 mtu 9192
+set interfaces ae0 aggregated-ether-options minimum-links 1
+set interfaces ae0 aggregated-ether-options link-speed 40g
+set interfaces ae0 aggregated-ether-options lacp active
+set interfaces ae0 aggregated-ether-options lacp periodic slow
+set interfaces ae0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae0 unit 0 family ethernet-switching vlan members 1-4092
+set interfaces et-0/0/50 ether-options 802.3ad ae0
+set interfaces et-0/0/51 ether-options 802.3ad ae0
+set interfaces irb unit 4092 family inet address 169.254.254.255/31
+
+set interfaces ae1 description $1
+set interfaces ae1 mtu 9192
+set interfaces ae1 aggregated-ether-options minimum-links 1
+set interfaces ae1 aggregated-ether-options link-speed 40g
+set interfaces ae1 aggregated-ether-options lacp active
+set interfaces ae1 aggregated-ether-options lacp periodic slow
+set interfaces ae1 aggregated-ether-options lacp system-id $2
+set interfaces ae1 aggregated-ether-options lacp admin-key 1
+set interfaces ae1 aggregated-ether-options mc-ae mc-ae-id 1
+set interfaces ae1 aggregated-ether-options mc-ae chassis-id 1
+set interfaces ae1 aggregated-ether-options mc-ae mode active-active
+set interfaces ae1 aggregated-ether-options mc-ae status-control standby
+set interfaces ae1 aggregated-ether-options mc-ae events iccp-peer-down prefer-status-control-active
+set interfaces ae1 aggregated-ether-options mc-ae init-delay-time 240
+set interfaces ae1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae1 unit 0 family ethernet-switching vlan members 1-4091
+set interfaces et-0/0/52 ether-options 802.3ad ae1
+set interfaces et-0/0/53 ether-options 802.3ad ae1
+
+set protocols iccp local-ip-addr 169.254.254.255
+set protocols iccp peer 169.254.254.254 session-establishment-hold-time 50
+set protocols iccp peer 169.254.254.254 backup-liveness-detection backup-peer-ip $4
+set protocols iccp peer 169.254.254.254 liveness-detection minimum-receive-interval 3000
+set protocols iccp peer 169.254.254.254 liveness-detection transmit-interval minimum-interval 3000
+set multi-chassis multi-chassis-protection 169.254.254.254 interface ae0
+set protocols mstp configuration-name $3
+set protocols mstp revision-level 0
+set protocols mstp system-identifier $2
+set protocols mstp bridge-priority 12k
+set protocols mstp bpdu-block-on-edge
+set vlans ICCP vlan-id 4092
+set vlans ICCP l3-interface irb.4092

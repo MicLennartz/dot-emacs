@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: add-new-edge
+# key: ->
+# --
+$1 -> $2 [ taillabel="$3" headlabel="$4" ]
+$0

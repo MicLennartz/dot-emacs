@@ -1,0 +1,50 @@
+# -*- mode: snippet -*-
+# name: irb interface
+# key: irb-int
+# --
+
+VPN:    ${1:VPN-name}
+VLAN:   ${2:VLAN-id}
+DESC:   ${3:Description}
+L2dom:  ${4:l2-domain}
+
+
+PE router 1:
+
+set groups $1 interfaces aeX unit 0 family bridge vlan-id-list $2
+...more...
+
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 arp 10.221.6.149 l2-interface ae0.1012
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 arp 10.221.6.149 mac 40:a6:77:51:37:f0
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 vrrp-group 1 virtual-address 10.221.6.150
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 vrrp-group 1 priority 254
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 vrrp-group 1 advertise-interval 1
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 vrrp-group 1 preempt hold-time 90
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.148/29 vrrp-group 1 accept-data
+set groups $1 interfaces irb unit $2 description "$1_$2_$3"
+set groups $1 routing-instances $1 interface irb.$2
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 vlan-id $2
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 description "$3"
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 domain-type bridge
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 routing-interface irb.$2
+
+
+
+PE router 2:
+
+set groups $1 interfaces ae1 unit 0 family bridge vlan-id-list $2
+...more...
+
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 arp 10.221.6.148 l2-interface ae0.1012
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 arp 10.221.6.148 mac 88:a2:5e:10:87:f0
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 vrrp-group 1 virtual-address 10.221.6.150
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 vrrp-group 1 priority 253
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 vrrp-group 1 advertise-interval 1
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 vrrp-group 1 preempt hold-time 90
+set groups $1 interfaces irb unit $2 family inet address 10.221.6.149/29 vrrp-group 1 accept-data
+set groups $1 interfaces irb unit $2 description "$1_$2_$3"
+set groups $1 routing-instances $1 interface irb.$2
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 vlan-id $2
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 description "$3"
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 domain-type bridge
+set groups $1 routing-instances VSW_$4 bridge-domains BD_$1_0$2 routing-interface irb.$2

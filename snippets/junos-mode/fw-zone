@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: fw-zone
+# key: fw-zone
+# --
+
+set cli confirmation-prompt off
+set cli config-output-format set
+configure
+set device-group GIC-SERO tag ${1:zone_name}
+set device-group GIC-SERO address-group G_$1 dynamic filter "'$1'"
+set device-group GIC-SERO address-group G_$1 tag ALL-${2:site}-IGIC-prod
+set device-group GIC-SERO address-group G_$1 tag $2-IGIC-${3:security_profile}
+commit
+run commit-all shared-policy device-group GIC-SERO

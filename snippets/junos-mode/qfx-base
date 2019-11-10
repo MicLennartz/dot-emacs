@@ -1,0 +1,115 @@
+# -*- mode: snippet -*-
+# name: QFX5100 base config
+# key: qfx-base
+# --
+
+hostname:           ${1:\{\{hostname\}\}}
+DNS:                ${2:\{\{DNS\}\}}
+Location:           ${3:\{\{Location\}\}}
+
+
+# Base config for QFX5100 switches
+set groups SHUTDOWN interfaces <*> description "Disabled by apply-group"
+set groups SHUTDOWN interfaces <*> disable
+set groups no-traps interfaces <*> no-traps
+set groups no-traps interfaces <*> unit <*> no-traps
+set apply-groups no-traps
+set system host-name $1
+set system domain-name $2
+set system time-zone Europe/Stockholm
+set system arp aging-timer 5
+set system authentication-order password
+set system authentication-order tacplus
+set system location country-code SE
+set system root-authentication encrypted-password "\$1\$a1gCMJnc\$m9knRkVlBWW8e/SQv/Bu3/"
+set system name-server 10.221.230.86
+set system name-server 10.221.230.87
+set system tacplus-server 10.221.230.100 secret "\$9\$nJdG6pO1RSleMFnevM8N-jHqfz60BIrKMcSdsY4DjuO1hlMVw2"
+set system tacplus-server 10.221.230.100 timeout 5
+set system tacplus-server 10.221.230.100 single-connection
+set system tacplus-server 10.221.230.101 secret "\$9\$nJdG6pO1RSleMFnevM8N-jHqfz60BIrKMcSdsY4DjuO1hlMVw2"
+set system tacplus-server 10.221.230.101 timeout 5
+set system tacplus-server 10.221.230.101 single-connection
+set system tacplus-server 10.221.230.102 secret "\$9\$nJdG6pO1RSleMFnevM8N-jHqfz60BIrKMcSdsY4DjuO1hlMVw2"
+set system tacplus-server 10.221.230.102 timeout 5
+set system tacplus-server 10.221.230.102 single-connection
+set system login message "******************************  Warning  ******************************\nThis is an official computer system and is the property of Ericsson AB.\nIt is for authorized users only. Unauthorized users are prohibited.\nUsers (authorized or unauthorized) have no explicit or implicit\nexpectation of privacy. Any or all uses of this system may be subject\nto one or more of the following actions: interception, monitoring,\nrecording, auditing, inspection and disclosing to security personnel\nand law enforcement personnel, as well as authorized officials of other\nagencies, both domestic and foreign. By using this system, the user\nconsents to these actions. Unauthorized or improper use of this system\nmay result in administrative disciplinary action and civil and criminal\npenalties. By accessing t**************\nDiscontinue access immediately if you do not agree to the terms and\nconditions stated in this notice.\n***********************************************************************"
+set system login class read-only-local idle-timeout 120
+set system login class read-only-local permissions view
+set system login class super-user-local idle-timeout 120
+set system login class super-user-local permissions all
+set system login user admin uid 2004
+set system login user admin class super-user
+set system login user admin authentication encrypted-password "\$1\$pl4E2hJe\$S.PHHRyJ2C3p6O1l97lz./"
+set system login user remote-ro uid 2002
+set system login user remote-ro class read-only-local
+set system login user remote-rw uid 2003
+set system login user remote-rw class super-user-local
+set system login user netauto uid 2005
+set system login user netauto class super-user
+set system login user netauto authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAybicEDaaMzhonxOf3Q/YxMNAJFqJan6NimK/DKoQvGZo4ZmEbwTb+sW28B8fp4mVCI1oCMIrwhUgr3FxwMv/v87tg7Z5zKmztaDi3AKdqz4qUrElVYDB4dz3byhTk+EBVd673pIgDHiZuIbSeETd3UzVY/uATSGaBuPwshuEu3ObFVJSWEyuQ1BhMAxijiMHgH2LQmHjbyIg3AQu81nbjxPVLOiwWJDPoS1dM8fYaaUSpO65GJiJlUplLZKZiTqdLh7t1O21KIJbCO6wbKKtaDPVxh3kOKjSCkYP/+rXYvqxVK2UVuigpqMYnEDDPhW24WCjjBKzFIEJdN0QpcGfYQ== netauto@seliiugw00003.seli.gic.ericsson.se"
+set system services ssh root-login allow
+set system services ssh max-sessions-per-connection 32
+set system services netconf ssh
+set system syslog user * any emergency
+set system syslog host 10.221.224.17 any notice
+set system syslog host 10.221.224.17 authorization any
+set system syslog host 10.221.224.17 interactive-commands any
+set system syslog host 10.221.224.17 match "!(.*LICENSE_SHM_.*|/usr/sbin/sshd.*exited.*status.*255|.*mld6_input.*is not link-local.*|.*LBCM-L2,pfe_bcm_l2_mac_add().*)"
+set system syslog host 10.221.224.17 explicit-priority
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file messages match "!(.*LICENSE_SHM_.*|/usr/sbin/sshd.*exited.*status.*255|.*mld6_input.*is not link-local.*|.*LBCM-L2,pfe_bcm_l2_mac_add().*)"
+set system syslog file messages archive size 100k
+set system syslog file messages archive files 5
+set system syslog file interactive-commands interactive-commands any
+set system syslog file default-log-messages any any
+set system syslog file default-log-messages match "(requested 'commit' operation)|(requested 'commit synchronize' operation)|(copying configuration to juniper.save)|(commit complete)|ifAdminStatus|(FRU power)|(FRU removal)|(FRU insertion)|(link UP)|transitioned|Transferred|transfer-file|(license add)|(license delete)|(package -X update)|(package -X delete)|(FRU Online)|(FRU Offline)|(plugged in)|(unplugged)|QF_NODE|QF_SERVER_NODE_GROUP|QF_INTERCONNECT|QF_DIRECTOR|QF_NETWORK_NODE_GROUP|(Master Unchanged, Members Changed)|(Master Changed, Members Changed)|(Master Detected, Members Changed)|(vc add)|(vc delete)|(Master detected)|(Master changed)|(Backup detected)|(Backup changed)|(interface vcp-)|(AIS_DATA_AVAILABLE)"
+set system syslog file default-log-messages structured-data
+set system syslog file auth authorization info
+set system syslog file auth archive size 100k
+set system syslog file auth archive files 5
+set system syslog file wtmp archive size 1m
+set system syslog file wtmp archive files 10
+set system syslog file wtmp archive binary-data
+set system archival configuration transfer-on-commit
+set security ssh-known-hosts host 10.221.224.10 rsa-key AAAAB3NzaC1yc2EAAAABIwAAAQEA33kQj7nswULQNUxSrLGqMxYRckufLsS6mLNkTvOb54TubT9/BoIQKYqr4fnVhUEFa2T60bSHRR9Z5jkSj+GgE9bKeSPggJWQAy9Cl4R2pIVorLisMhmAdbmd9hVsjGBn5IbB6WUw5owHkis7bBQmXEqtEfV5gMnb7KbBlcpzJIpakVRDZI2G2se+3emTUrtylwg1f0S7eOsaAwSfABN23q/VLicH5YdADmF8EEIH7z+HK/VwyTx1pIbOK5ju0y53Px3yjW1XaTugmQVs6FCyi3TAy+bRJkcMYs2v4r9jjlJnv4+/rsuvAowE3GAIBsR4G9zW/lh9VPuNJ4vgzZg+HQ==
+set system archival configuration archive-sites "scp://backup@10.221.224.10:/var/backups/network/$1/" password "\$9\$ualk0Ec8LNYgJjHOIcr8LjHq.Tz"
+set system extensions providers juniper license-type juniper deployment-scope commercial
+set system commit synchronize
+set system ntp boot-server 10.128.2.14
+set system ntp server 10.128.2.14
+set system ntp server 10.128.2.22
+set system ntp server 10.128.2.54
+set system ntp server 10.128.2.62
+set snmp location "$3"
+set snmp contact "GIC Network Operations SERO <PDLICNETWO@pdl.internal.ericsson.com>"
+set snmp community ADDM-RO authorization read-only
+set snmp community ADDM-RO clients 134.138.2.15/32
+set snmp community ADDM-RO clients 134.138.2.16/32
+set snmp community ADDM-RO clients 134.138.2.17/32
+set snmp community ADDM-RO clients 134.138.2.64/27
+set snmp community ggn-ro authorization read-only
+set snmp community ggn-ro clients 10.221.224.0/24
+set snmp community ggn-ro clients 2001:1b74:a0:f000::/64
+set snmp community ggn-ro clients 10.221.230.0/26
+set snmp community RESTRICTED authorization read-only
+set snmp community RESTRICTED clients 134.138.2.15/32
+set snmp community RESTRICTED clients 134.138.2.16/32
+set snmp community RESTRICTED clients 134.138.2.17/32
+set snmp community RESTRICTED clients 134.138.2.64/27
+set snmp community RESTRICTED clients 10.221.230.0/26
+set snmp community READ_ONLY authorization read-only
+set snmp community READ_ONLY clients 10.221.224.0/24
+set snmp community READ_ONLY clients 2001:1b74:a0:f000::/64
+set snmp community READ_ONLY clients 10.221.230.0/26
+set snmp trap-group space targets 10.221.224.32
+set snmp trap-group ggn-trap version v2
+set snmp trap-group ggn-trap targets 10.221.224.16
+set forwarding-options storm-control-profiles default all
+set protocols lldp port-id-subtype interface-name
+set protocols lldp port-description-type interface-description
+set protocols lldp interface all
+set protocols lldp-med interface all
+set protocols igmp-snooping vlan default
+set protocols igmp-snooping vlan all
