@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: SRX firewall policy
+# key: srx-pol
+# --
+delete security policies from-zone ${1:src-zone} to-zone ${2:dst-zone} policy ${3:policy-name}
+set security policies from-zone $1 to-zone $2 policy $3 description "$3: ${4:description}"
+set security address-book $1 address ${5: src-ip} $5
+set security address-book $2 address ${6: dst-ip} $6
+set security policies from-zone $1 to-zone $2 policy $3 match source-address $5
+set security policies from-zone $1 to-zone $2 policy $3 match destination-address $6
+set security policies from-zone $1 to-zone $2 policy $3 match application ${7:application}
+set security policies from-zone $1 to-zone $2 policy $3 then permit
+commit comment "modified via script by $8"
