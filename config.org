@@ -5,6 +5,7 @@
 #+OPTIONS: num:nil
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 [[./img/screen.png]]
+
 * Installation
 ** Quick Installation
 =git clone https://github.com/MicLennartz/dot-emacs.git ~/.emacs.d=
@@ -179,6 +180,13 @@ Lets us use asynchronous processes wherever possible, pretty useful.
     :ensure t
     :init (dired-async-mode 1))
 #+END_SRC
+
+*** Shift selection mode 
+For convenience I need to enable this
+#+BEGIN_SRC emacs-lisp
+(setq shift-select-mode t)
+#+END_SRC
+
 * Projectile
 Projectile is an awesome project manager, mostly because it recognizes directories
 with a =.git= directory as projects and helps you manage them accordingly.
@@ -399,6 +407,12 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
     :ensure t
     :bind ("C-s" . 'swiper))
 #+END_SRC
+** visual regexp
+For big files the visual regexp module is the most promising
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-regexp-steroids
+    :ensure t)
+#+END_SRC
 
 ** buffers and why I hate list-buffers
 Another big thing is, buffers. If you use emacs, you use buffers, everyone loves them.
@@ -416,7 +430,7 @@ Doing =C-x k= should kill the current buffer at all times, we have =ibuffer= for
 
 *** Kill buffers without asking for confirmation
 Unless you have the muscle memory, I recommend omitting this bit, as you may lose progress for no reason when working.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
 
@@ -599,6 +613,12 @@ And this quickly deletes a line.
 
 #+RESULTS:
 : save-region-or-current-line
+** Evil mode
+Sometime it's easier to do things in VIM, so we have Evil-mode for this pupose here
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t)
+#+END_SRC
 
 * Minor conveniences
 Emacs is at it's best when it just does things for you, shows you the way, guides you so to speak.
@@ -739,6 +759,13 @@ A small function to create a new scratch buffer. Strange, that Emacs doesn't see
 #+RESULTS:
 : create-scratch-buffer
 
+* eDiff
+Some better defaults, e.g. single window setup
+#+BEGIN_SRC emacs-lisp
+(setq ediff-split-window-function 'split-window-horizontally)
+(setq ediff-merge-split-window-function 'split-window-horizontally)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+END_SRC
 * Kill ring
 There is a lot of customization to the kill ring, and while I have not used it much before,
 I decided that it was time to change that.
@@ -941,6 +968,7 @@ I needed to do some shenanigans to get great auto-completion but here goes.
   ;;; behold, perfection :°)
   (global-set-key (kbd "<f9>") '(lambda () (interactive) (start-process "love-play-game" nil "love" default-directory)))
 #+END_SRC
+* TODO Spell-checking
 * Git integration
 Countless are the times where I opened ansi-term to use =git= on something.
 These times are also something that I'd prefer stay in the past, since =magit= is
@@ -1015,8 +1043,6 @@ There is a nice REST api client, which can be very useful during the daily progr
     :ensure t)
 #+END_SRC
 
-#+RESULTS:
-
 * Org
 One of the absolute greatest features of emacs is called "org-mode".
 This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
@@ -1088,8 +1114,6 @@ Here is how we add more of them!
     (add-to-list 'load-path "/usr/share/emacs/site-lisp/tex-utils")
     (require 'xdvi-search))
 #+END_SRC
-*** Twitter Bootstrap
-#+BEGIN_SRC emacs-lisp
   
 ** Presentations
 This is a minor mode to use org files for quick and simple presentations
@@ -1101,6 +1125,13 @@ This is a minor mode to use org files for quick and simple presentations
     (define-key org-mode-map (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle))
 #+END_SRC
 
+For more sophisticated demonstrations, based on org files, you can use demo-it, which is based on org-tree-slide
+
+#+BEGIN_SRC emacs-lisp
+  (use-package demo-it
+    :ensure t)
+#+END_SRC
+
 ** Image download
 This is to drag-n-drop images from various sources to org files
 #+BEGIN_SRC emacs-lisp
@@ -1109,7 +1140,6 @@ This is to drag-n-drop images from various sources to org files
     :config
     (add-hook 'dired-mode-hook 'org-download-enable))
 #+END_SRC
-
 * Diminishing modes
 Your modeline is sacred, and if you have a lot of modes enabled, as you will if you use this config,
 you might end up with a lot of clutter there, the package =diminish= disables modes on the mode line but keeps
@@ -1169,4 +1199,9 @@ Some of the most common Apple key bindings
 (global-set-key (kbd "S-s-<right>") 'windmove-right)
 (global-set-key (kbd "C-s-<up>") 'move-line-up)
 (global-set-key (kbd "C-s-<down>") 'move-line-down)
+#+END_SRC
+* Start the Emacs server
+To enable the possibility to open files from command line (as well remote) in a single emacs instance, we need to start the server process.
+#+BEGIN_SRC emacs-lisp
+(server-start)
 #+END_SRC
