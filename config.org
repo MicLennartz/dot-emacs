@@ -50,6 +50,10 @@ brew install ipython jupyter
 - =ansible=, for ob-ansible
 - =junos-eznc=, for junos-mode
 <<<<<<< HEAD
+** Jupyter
+#+BEGIN_SRC bash :tangle no
+brew install jupyter
+#+END_SRC
 * Environment
 The have the search path from shell:
 #+BEGIN_SRC emacs-lisp
