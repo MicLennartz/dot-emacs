@@ -39,11 +39,24 @@ Have some fun with it, add your own keybindings, change parameters, it's your ed
 
 *** pip
 - =pip install jedi flake8 autopep8=, here, a one line install.
+*** Jupyter / iPython
+#+BEGIN_SRC bash :tangle no
+brew install ipython jupyter
+#+END_SRC
 ** Org / Babel
 *** Package manager
 *** pip
 - =ansible=, for ob-ansible
 - =junos-eznc=, for junos-mode
+* Environment
+The have the search path from shell:
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize))
+#+END_SRC
+
 * Some notes
 ** On use-package some more
 We utilize use-package to handle downloading and configuring other packages painlessly.
@@ -918,6 +931,13 @@ I needed to do some shenanigans to get great auto-completion but here goes.
   ;;; behold, perfection :°)
   (global-set-key (kbd "<f9>") '(lambda () (interactive) (start-process "love-play-game" nil "love" default-directory)))
 #+END_SRC
+** Jupyter integration
+The emacs-jupyter module seems to be the most complete and recent.
+#+BEGIN_SRC emacs-lisp
+(use-package jupyter
+  :ensure t)
+#+END_SRC
+
 * Git integration
 Countless are the times where I opened ansi-term to use =git= on something.
 These times are also something that I'd prefer stay in the past, since =magit= is
@@ -975,6 +995,12 @@ There is a nice Org Babel integration for Ansible ad-hoc commands and playbook e
 
 #+RESULTS:
 
+* RESTclient
+There is a nice RESTclient with Babel integration to interact with RESTful APIs. Can be useful during development.
+#+BEGIN_SRC emacs-lisp
+  (use-package restclient
+    :ensure t)
+#+END_SRC
 * Org
 One of the absolute greatest features of emacs is called "org-mode".
 This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
