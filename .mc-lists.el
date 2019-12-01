@@ -12,7 +12,11 @@
 (setq mc/cmds-to-run-once
       '(
 	helm-M-x
+	mac-mwheel-scroll
+	mouse-drag-mode-line
+	mouse-select-window
 	org-shiftdown
 	org-shiftright
 	org-shiftup
+	yas-visit-snippet-file
 	))
