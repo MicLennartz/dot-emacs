@@ -424,8 +424,11 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :ensure t
-    :bind ("C-s" . 'swiper))
+    :bind ("C-s" . 'swiper)
+    :config
+    (setq lazy-highlight-cleanup nil))
 #+END_SRC
+
 ** visual regexp
 For big files the visual regexp module is the most promising
 #+BEGIN_SRC emacs-lisp
@@ -995,7 +998,12 @@ The emacs-jupyter module seems to be the most complete and recent.
   :ensure t)
 #+END_SRC
 
-=======
+For dealing with Jupyter notebooks you need EIN
+#+BEGIN_SRC emacs-lisp
+(use-package ein
+  :ensure t)
+#+END_SRC
+
 * TODO Spell-checking
 >>>>>>> 3ccc43ec354de03d526b92a63bccb1eada2ff050
 * Git integration
