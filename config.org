@@ -44,6 +44,10 @@ Have some fun with it, add your own keybindings, change parameters, it's your ed
 #+BEGIN_SRC bash :tangle no
 brew install ipython jupyter
 #+END_SRC
+*** Python / LSP
+#+BEGIN_SRC bash :tangle no
+pip3 install python-language-server yapf rope pyflakes ptvsd
+#+END_SRC
 ** Org / Babel
 *** Package manager
 *** pip
@@ -873,30 +877,65 @@ Each category also has additional settings.
 
 #+END_SRC
 
-*** TODO python
+*** python
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'python-mode-hook 'yas-minor-mode)
-  (add-hook 'python-mode-hook 'flycheck-mode)
+   (add-hook 'python-mode-hook 'yas-minor-mode)
+   (add-hook 'python-mode-hook 'flycheck-mode)
 
-  (with-eval-after-load 'company
-      (add-hook 'python-mode-hook 'company-mode))
+   (with-eval-after-load 'company
+       (add-hook 'python-mode-hook 'company-mode))
 
-  (use-package company-jedi
-    :ensure t
-    :config
-      (require 'company)
-      (add-to-list 'company-backends 'company-jedi))
+   (use-package company-jedi
+     :ensure t
+     :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-jedi)
+       (add-hook 'python-mode-hook 'python-mode-company-init))
 
-  (defun python-mode-company-init ()
-    (setq-local company-backends '((company-jedi
-                                    company-etags
-                                    company-dabbrev-code))))
+   (defun python-mode-company-init ()
+     (setq-local company-backends '((company-jedi
+                                     company-etags
+                                     company-dabbrev-code))))
 
-  (use-package company-jedi
-    :ensure t
-    :config
-      (require 'company)
-      (add-hook 'python-mode-hook 'python-mode-company-init))
+   (use-package lsp-mode
+     :ensure t
+     :config
+     (add-hook 'python-mode-hook #'lsp)
+     (setq lsp-prefer-flymake nil)) ;; Prefer using lsp-ui (flycheck) over flymake.
+
+   (use-package lsp-ui
+     :ensure t
+     :requires lsp-mode flycheck
+     :config
+     (setq lsp-ui-doc-enable t
+         lsp-ui-doc-use-childframe t
+         lsp-ui-doc-position 'top
+         lsp-ui-doc-include-signature t
+         lsp-ui-sideline-enable nil
+         lsp-ui-flycheck-enable t
+         lsp-ui-flycheck-list-position 'right
+         lsp-ui-flycheck-live-reporting t
+         lsp-ui-peek-enable t
+         lsp-ui-peek-list-width 60
+         lsp-ui-peek-peek-height 25)
+     (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+   (use-package company-lsp
+     :ensure t)
+
+   (use-package helm-lsp
+     :ensure t)
+
+  (use-package dap-mode
+     :ensure t
+     :config
+     (require 'dap-python)
+     (dap-mode 1)
+     (dap-ui-mode 1)
+     (dap-tooltip-mode 1)
+     (tooltip-mode 1)
+     (add-hook 'dap-stopped-hook
+           (lambda (arg) (call-interactively #'dap-hydra))))
 #+END_SRC
 
 *** emacs-lisp
@@ -1098,7 +1137,7 @@ Those are all rather self-explanatory.
 ** Common settings
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis " ")
+  (setq org-ellipsis " ▻")
   (setq org-src-fontify-natively t)
   (setq org-src-tab-acts-natively t)
   (setq org-confirm-babel-evaluate nil)
@@ -1107,6 +1146,9 @@ Those are all rather self-explanatory.
   (setq org-image-actual-width nil)
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil Beautify Org Checkbox Symbol (setq prettify-symbols-alist (cons (quote ([ ] . ☐)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote ([X] . ☑)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote ([-] . ❍)) prettify-symbols-alist)) (prettify-symbols-mode)) | (lambda nil (org-bullets-mode)) | (lambda nil (visual-line-mode 1)) | org-indent-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp

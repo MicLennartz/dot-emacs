@@ -6,6 +6,7 @@
 	hungry-delete-backward
 	org-beginning-of-line
 	org-end-of-line
+	org-force-self-insert
 	org-self-insert-command
 	))
 
