@@ -12,6 +12,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+	dap-tooltip-mouse-motion
 	helm-M-x
 	mac-mwheel-scroll
 	mouse-drag-mode-line

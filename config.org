@@ -1134,6 +1134,16 @@ Org-mode is one of the most complex things ever, lets make it a bit more usable 
 
 Those are all rather self-explanatory.
 
+** Org-plus
+Install addtional contribution packages, such as exporters and link handlers
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :ensure org-plus-contrib
+    :config
+    (require 'ox-confluence))
+
+#+END_SRC
+
 ** Common settings
 
 #+BEGIN_SRC emacs-lisp
@@ -1290,3 +1300,4 @@ To enable the possibility to open files from command line (as well remote) in a 
 #+BEGIN_SRC emacs-lisp
 (server-start)
 #+END_SRC
+

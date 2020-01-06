@@ -24,3 +24,6 @@ transient
 auto-complete-love
 auto-complete-lua
 projectile.cache
+.dap-breakpoints
+.lsp-session-v1
+request/
