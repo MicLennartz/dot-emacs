@@ -1311,5 +1311,3 @@ To enable the possibility to open files from command line (as well remote) in a 
 #+BEGIN_SRC emacs-lisp
 (server-start)
 #+END_SRC
-
-testing
