@@ -60,6 +60,14 @@
  '(jdee-db-requested-breakpoint-face-colors (cons "#0d0d0d" "#b5bd68"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#0d0d0d" "#5a5b5a"))
  '(objed-cursor-color "#cc6666")
+ '(org-agenda-files (quote ("~/org/todo.org")))
+ '(org-link-frame-setup
+   (quote
+    ((vm . vm-visit-folder-other-frame)
+     (vm-imap . vm-visit-imap-folder-other-frame)
+     (gnus . org-gnus-no-new-news)
+     (file . find-file-other-window)
+     (wl . wl-other-frame))))
  '(org-modules
    (quote
     (ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus ol-info ol-irc ol-mhe ol-rmail ol-w3m org-tempo)))
@@ -96,6 +104,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1d1f21" :foreground "#c5c8c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil" :family "Fira Code"))))
+ '(default ((t (:inherit nil :stipple nil :background "#1d1f21" :foreground "#c5c8c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil" :family "Menlo"))))
+ '(ediff-current-diff-A ((t (:background "gray23"))))
+ '(ediff-fine-diff-A ((t (:background "orange4" :weight bold))))
+ '(ediff-odd-diff-A ((t (:inherit ediff-even-diff-A :background "blue4"))))
  '(fringe ((t (:background "#292b2e"))))
- '(org-checkbox ((t (:inherit org-todo :weight light)))))
+ '(hl-line ((t (:background "blue4"))))
+ '(org-checkbox ((t (:inherit org-todo :weight light))))
+ '(region ((t (:background "DarkGoldenrod4")))))

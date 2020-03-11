@@ -428,7 +428,9 @@ I like me some searching, the default search is very meh. In emacs, you mostly u
 #+BEGIN_SRC emacs-lisp
   (use-package swiper
     :ensure t
-    :bind ("C-s" . 'swiper)
+    :bind 
+    ("C-s" . 'swiper)
+    ("C-S" . 'swiper-isearch-thing-at-point)
     :config
     (setq lazy-highlight-cleanup nil))
 #+END_SRC
@@ -526,10 +528,10 @@ it's rather similar to ido-vertical though.
 
   (require 'helm-config)    
   (helm-autoresize-mode 1)
-  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
-  (define-key helm-find-files-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-find-files-map (kbd "S-<tab>") 'helm-select-action)
+  (define-key helm-map (kbd "C-b") 'helm-find-files-up-one-level)
+  (define-key helm-map (kbd "C-f") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "S-<tab>") 'helm-select-action)
 #+END_SRC
 
 ** avy and why it's the best thing in existence
@@ -639,6 +641,60 @@ And this quickly deletes a line.
 
 #+RESULTS:
 : save-region-or-current-line
+** Duplicate line or region
+#+begin_src emacs-lisp
+(defun duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+If there's no region, the current line will be duplicated."
+  (interactive "p")
+  (if (region-active-p)
+      (let ((beg (region-beginning))
+            (end (region-end)))
+        (duplicate-region arg beg end)
+        (one-shot-keybinding "d" (λ (duplicate-region 1 beg end))))
+    (duplicate-current-line arg)
+    (one-shot-keybinding "d" 'duplicate-current-line)))
+
+(defun one-shot-keybinding (key command)
+  (set-temporary-overlay-map
+   (let ((map (make-sparse-keymap)))
+     (define-key map (kbd key) command)
+     map) t))
+
+(defun duplicate-region (&optional num start end)
+  "Duplicates the region bounded by START and END NUM times.
+If no START and END is provided, the current region-beginning and
+region-end is used."
+  (interactive "p")
+  (save-excursion
+    (let* ((start (or start (region-beginning)))
+           (end (or end (region-end)))
+           (region (buffer-substring start end)))
+      (goto-char end)
+      (dotimes (i num)
+        (insert region)))))
+
+(defun paredit-duplicate-current-line ()
+  (back-to-indentation)
+  (let (kill-ring kill-ring-yank-pointer)
+    (paredit-kill)
+    (yank)
+    (newline-and-indent)
+    (yank)))
+
+(defun duplicate-current-line (&optional num)
+  "Duplicate the current line NUM times."
+  (interactive "p")
+  (if (bound-and-true-p paredit-mode)
+      (paredit-duplicate-current-line)
+    (save-excursion
+      (when (eq (point-at-eol) (point-max))
+        (goto-char (point-max))
+        (newline)
+        (forward-char -1))
+      (duplicate-region num (point-at-bol) (1+ (point-at-eol))))))
+#+end_src
+
 ** Evil mode
 Sometime it's easier to do things in VIM, so we have Evil-mode for this pupose here
 #+BEGIN_SRC emacs-lisp
@@ -879,63 +935,64 @@ Each category also has additional settings.
 
 *** python
 #+BEGIN_SRC emacs-lisp
-   (add-hook 'python-mode-hook 'yas-minor-mode)
-   (add-hook 'python-mode-hook 'flycheck-mode)
+     (add-hook 'python-mode-hook 'yas-minor-mode)
+     (add-hook 'python-mode-hook 'flycheck-mode)
 
-   (with-eval-after-load 'company
-       (add-hook 'python-mode-hook 'company-mode))
+     (with-eval-after-load 'company
+         (add-hook 'python-mode-hook 'company-mode))
 
-   (use-package company-jedi
-     :ensure t
-     :config
-       (require 'company)
-       (add-to-list 'company-backends 'company-jedi)
-       (add-hook 'python-mode-hook 'python-mode-company-init))
+     (use-package company-jedi
+       :ensure t
+       :config
+         (require 'company)
+         (add-to-list 'company-backends 'company-jedi)
+         (add-hook 'python-mode-hook 'python-mode-company-init))
 
-   (defun python-mode-company-init ()
-     (setq-local company-backends '((company-jedi
-                                     company-etags
-                                     company-dabbrev-code))))
+     (defun python-mode-company-init ()
+       (setq-local company-backends '((company-jedi
+                                       company-etags
+                                       company-dabbrev-code))))
 
-   (use-package lsp-mode
-     :ensure t
-     :config
-     (add-hook 'python-mode-hook #'lsp)
-     (setq lsp-prefer-flymake nil)) ;; Prefer using lsp-ui (flycheck) over flymake.
+     (use-package lsp-mode
+       :ensure t
+       :config
+       (add-hook 'python-mode-hook #'lsp)
+       (setq lsp-prefer-flymake nil)) ;; Prefer using lsp-ui (flycheck) over flymake.
 
-   (use-package lsp-ui
-     :ensure t
-     :requires lsp-mode flycheck
-     :config
-     (setq lsp-ui-doc-enable t
-         lsp-ui-doc-use-childframe t
-         lsp-ui-doc-position 'top
-         lsp-ui-doc-include-signature t
-         lsp-ui-sideline-enable nil
-         lsp-ui-flycheck-enable t
-         lsp-ui-flycheck-list-position 'right
-         lsp-ui-flycheck-live-reporting t
-         lsp-ui-peek-enable t
-         lsp-ui-peek-list-width 60
-         lsp-ui-peek-peek-height 25)
-     (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+     (use-package lsp-ui
+       :ensure t
+       :requires lsp-mode flycheck
+       :config
+       (setq lsp-ui-doc-enable t
+           lsp-ui-doc-use-childframe t
+           lsp-ui-doc-position 'top
+           lsp-ui-doc-include-signature t
+           lsp-ui-sideline-enable nil
+           lsp-ui-flycheck-enable t
+           lsp-ui-flycheck-list-position 'right
+           lsp-ui-flycheck-live-reporting t
+           lsp-ui-peek-enable t
+           lsp-ui-peek-list-width 60
+           lsp-ui-peek-peek-height 25)
+       (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-   (use-package company-lsp
-     :ensure t)
+     (use-package company-lsp
+       :ensure t)
 
-   (use-package helm-lsp
-     :ensure t)
+     (use-package helm-lsp
+       :ensure t)
 
-  (use-package dap-mode
-     :ensure t
-     :config
-     (require 'dap-python)
-     (dap-mode 1)
-     (dap-ui-mode 1)
-     (dap-tooltip-mode 1)
-     (tooltip-mode 1)
-     (add-hook 'dap-stopped-hook
-           (lambda (arg) (call-interactively #'dap-hydra))))
+    (use-package dap-mode
+       :ensure t
+       :config
+       (require 'dap-python)
+       (dap-mode 1)
+       (dap-ui-mode 1)
+       (dap-tooltip-mode 1)
+       (tooltip-mode 1)
+       (add-hook 'dap-stopped-hook
+             (lambda (arg) (call-interactively #'dap-hydra))))
+  (setq dap-python-terminal "iterm ")
 #+END_SRC
 
 *** emacs-lisp
@@ -1119,12 +1176,6 @@ There is a nice REST api client, which can be very useful during the daily progr
     :ensure t)
 #+END_SRC
 
-* RESTclient
-There is a nice RESTclient with Babel integration to interact with RESTful APIs. Can be useful during development.
-#+BEGIN_SRC emacs-lisp
-  (use-package restclient
-    :ensure t)
-#+END_SRC
 * Org
 One of the absolute greatest features of emacs is called "org-mode".
 This very file has been written in org-mode, a lot of other configurations are written in org-mode, same goes for
@@ -1161,6 +1212,14 @@ In more recent versions of org-mode (contrib), easy templates were removed and n
   (setq org-image-actual-width nil)
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
+
+** org-capture
+Setup org file to store global TODO's for org-capture
+
+#+begin_src emacs-lisp
+(setq org-default-notes-file (concat org-directory "/todo.org"))
+#+end_src
+
 
 ** Babel language support
 Here we enable to different languages support for babel source code execution
@@ -1273,7 +1332,7 @@ Edit this list as you see fit!
     (diminish 'helm-mode))
 #+END_SRC
 
-* Apple keys
+* Custom key bindings (Apple like)
 Some of the most common Apple key bindings
 #+BEGIN_SRC emacs-lisp
 (setq mac-option-modifier 'meta)
@@ -1283,7 +1342,7 @@ Some of the most common Apple key bindings
 (global-set-key (kbd "s-'") 'er/expand-region);
 (global-set-key (kbd "s-\"") 'er/contract-region);
 
-(global-set-key (kbd "s-S-d") 'duplicate-current-line)
+(global-set-key (kbd "C-c d") 'duplicate-current-line-or-region)
 (global-set-key (kbd "C-S-k") 'kill-and-retry-line)
 (global-set-key (kbd "s-j") 'join-line)
 (global-set-key (kbd "s-s") 'save-buffer)
@@ -1305,9 +1364,12 @@ Some of the most common Apple key bindings
 (global-set-key (kbd "S-s-<right>") 'windmove-right)
 (global-set-key (kbd "C-s-<up>") 'move-line-up)
 (global-set-key (kbd "C-s-<down>") 'move-line-down)
+(global-set-key (kbd "M-/") 'vr/replace)
+
 #+END_SRC
 * Start the Emacs server
 To enable the possibility to open files from command line (as well remote) in a single emacs instance, we need to start the server process.
 #+BEGIN_SRC emacs-lisp
 (server-start)
 #+END_SRC
+

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: fw-policy
+# key: fw-policy
+# --
+
+Set security policies global policy ${1:name} description "${2:description}"
+set security policies global policy $1 match source-address ${3:source}
+set security policies global policy $1 match destination-address ${4:destination}
+set security policies global policy $1 match application ${5:application}
+set security policies global policy $1 match from-zone ${6:from-zone}
+set security policies global policy $1 match to-zone ${7:to-zone}
+set security policies global policy $1 then ${8:$$(yas-choose-value '("permit" "deny"))}

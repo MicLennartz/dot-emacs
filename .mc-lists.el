@@ -3,22 +3,29 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+	beginning-of-visual-line
+	c-electric-colon
+	end-of-visual-line
 	hungry-delete-backward
+	indent-for-tab-command
 	org-beginning-of-line
 	org-end-of-line
 	org-force-self-insert
 	org-self-insert-command
+	org-yank
 	))
 
 (setq mc/cmds-to-run-once
       '(
 	dap-tooltip-mouse-motion
 	helm-M-x
+	helm-confirm-and-exit-minibuffer
 	mac-mwheel-scroll
 	mouse-drag-mode-line
 	mouse-select-window
 	org-shiftdown
 	org-shiftright
 	org-shiftup
+	swiper-isearch-thing-at-point
 	yas-visit-snippet-file
 	))
