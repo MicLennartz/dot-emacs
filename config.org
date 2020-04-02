@@ -917,12 +917,12 @@ Each category also has additional settings.
   (add-hook 'c++-mode-hook 'yas-minor-mode)
   (add-hook 'c-mode-hook 'yas-minor-mode)
 
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :config
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-       (flycheck-clang-analyzer-setup)))
+;  (use-package flycheck-clang-analyzer
+;    :ensure t
+;    :config
+;    (with-eval-after-load 'flycheck
+;      (require 'flycheck-clang-analyzer)
+;       (flycheck-clang-analyzer-setup)))
 
   (with-eval-after-load 'company
     (add-hook 'c++-mode-hook 'company-mode)
