@@ -1094,12 +1094,22 @@ The emacs-jupyter module seems to be the most complete and recent.
   :ensure t)
 #+END_SRC
 
+<<<<<<< Updated upstream
 For dealing with Jupyter notebooks you need EIN
 #+BEGIN_SRC emacs-lisp
 (use-package ein
   :ensure t)
 #+END_SRC
 
+=======
+For loading Jupyter notebooks:
+#+BEGIN_SRC emacs-lisp
+(use-package ein
+ :ensure t)
+#+END_SRC
+
+=======
+>>>>>>> Stashed changes
 * TODO Spell-checking
 >>>>>>> 3ccc43ec354de03d526b92a63bccb1eada2ff050
 * Git integration
@@ -1213,6 +1223,7 @@ In more recent versions of org-mode (contrib), easy templates were removed and n
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+END_SRC
 
+<<<<<<< Updated upstream
 ** org-capture
 Setup org file to store global TODO's for org-capture
 
@@ -1235,6 +1246,16 @@ Here we enable to different languages support for babel source code execution
 #+end_src
 
 #+RESULTS:
+=======
+** Babel languages
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (jupyter . t)))
+#+END_SRC
+>>>>>>> Stashed changes
 
 ** Syntax highlighting for documents exported to HTML
 #+BEGIN_SRC emacs-lisp
