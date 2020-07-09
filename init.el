@@ -54,8 +54,9 @@
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(custom-safe-themes
    (quote
-    ("0fe9f7a04e7a00ad99ecacc875c8ccb4153204e29d3e57e9669691e6ed8340ce" default)))
+    ("2d1fe7c9007a5b76cea4395b0fc664d0c1cfd34bb4f1860300347cdad67fb2f9" "f2b83b9388b1a57f6286153130ee704243870d40ae9ec931d0a1798a5a916e76" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "f951343d4bbe5a90dba0f058de8317ca58a6822faa65d8463b0e751a07ec887c" "e7666261f46e2f4f42fd1f9aa1875bdb81d17cc7a121533cad3e0d724f12faf2" "0fe9f7a04e7a00ad99ecacc875c8ccb4153204e29d3e57e9669691e6ed8340ce" default)))
  '(fci-rule-color "#5c5e5e")
+ '(indent-tabs-mode nil)
  '(jdee-db-active-breakpoint-face-colors (cons "#0d0d0d" "#81a2be"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#0d0d0d" "#b5bd68"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#0d0d0d" "#5a5b5a"))
@@ -74,8 +75,11 @@
  '(package-selected-packages
    (quote
     (straight multiple-cursors doom-modeline love-minor-mode auto-complete slime-company slime company-jedi zzz-to-char rainbow-delimiters avy ivy projectile sunrise-x-modeline sunrise-x-buttons sunrise-commander twittering-mode zerodark-theme pretty-mode flycheck-clang-analyzer flycheck-irony flycheck yasnippet-snippets yasnippet company-c-headers company-shell company-irony irony irony-mode company-lua expand-region swiper popup-kill-ring dmenu ido-vertical-mode ido-vertical ox-html5slide centered-window-mode htmlize ox-twbs diminish erc-hl-nicks rainbow-mode switch-window dashboard smex company sudo-edit emms magit org-bullets hungry-delete beacon spaceline exwm which-key use-package)))
+ '(plantuml-default-exec-mode (quote executable))
+ '(plantuml-jar-path "/Users/eedmicl/local/lib/plantuml.jar")
  '(pos-tip-background-color "#36473A")
  '(pos-tip-foreground-color "#FFFFC8")
+ '(python-shell-interpreter "ipython")
  '(user-full-name "Michael Lennartz")
  '(vc-annotate-background "#1d1f21")
  '(vc-annotate-color-map
@@ -104,11 +108,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1d1f21" :foreground "#c5c8c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil" :family "Menlo"))))
+ '(default ((t (:inherit nil :stipple nil :background "#1d1f21" :foreground "#c5c8c6" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 180 :width normal :foundry "nil" :family "Iosevka"))))
  '(ediff-current-diff-A ((t (:background "gray23"))))
  '(ediff-fine-diff-A ((t (:background "orange4" :weight bold))))
  '(ediff-odd-diff-A ((t (:inherit ediff-even-diff-A :background "blue4"))))
  '(fringe ((t (:background "#292b2e"))))
  '(hl-line ((t (:background "blue4"))))
  '(org-checkbox ((t (:inherit org-todo :weight light))))
- '(region ((t (:background "DarkGoldenrod4")))))
+ '(region ((t (:background "gold4"))))
+ '(variable-pitch ((t (:family "Fira Sans")))))

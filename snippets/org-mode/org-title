@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: org-new-title
+# key: org-title
+# --
+${1:MY PROJECT} -*- mode: org -*-

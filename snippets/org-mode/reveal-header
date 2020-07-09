@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: reveal header
+# key: rev-header
+# --
+
+#+OPTIONS: num:nil toc:nil
+#+REVEAL_INIT_OPTIONS: width:1200, height:800, controlsLayout: 'edges',
+#+REVEAL_INIT_OPTIONS: pdfMaxPagesPerSlide: 1,
+#+REVEAL_INIT_OPTIONS: slideNumber:true, hashOneBasedIndex:true
+#+REVEAL_INIT_OPTIONS: fragmentInURL:true
+#+REVEAL_THEME: black
+#+REVEAL_TRANS: none
+#+REVEAL_EXTRA_CSS: file:///Users/eedmicl/proj/org/css/logo.css
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h4>%a , %d</h4>
+
+#+Title: ${1: title}
+#+Author: ${2: your name}
+#+Date: ${3: some date}
