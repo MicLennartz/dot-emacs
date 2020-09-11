@@ -149,7 +149,7 @@ We use an actual replacement for it, keep reading or head directly to =dashboard
 If you like using any of those, change =-1= to =1=.
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (scroll-bar-mode -1)
 #+END_SRC
 *** Disable bell
@@ -868,6 +868,13 @@ A small function to create a new scratch buffer. Strange, that Emacs doesn't see
 #+RESULTS:
 : create-scratch-buffer
 
+** Keep selection after copy
+Per default the selection is cleared, when text is copied to clipboard. This here created the more typical behavior:
+#+begin_src emacs-lisp
+(advice-add  #'kill-ring-save :after (lambda (&rest _)
+			               (setq deactivate-mark nil)))
+#+end_src
+
 * eDiff
 Some better defaults, e.g. single window setup
 #+BEGIN_SRC emacs-lisp
@@ -1025,6 +1032,8 @@ Each category also has additional settings.
                    lsp-ui-doc-use-childframe t
                    lsp-ui-doc-position 'top
                    lsp-ui-doc-include-signature t
+                   lsp-ui-doc-max-width 60
+                   lsp-ui-doc-max-height 40
                    lsp-ui-sideline-enable nil
                    lsp-ui-flycheck-enable t
                    lsp-ui-flycheck-list-position 'right
@@ -1043,14 +1052,15 @@ Each category also has additional settings.
             (use-package dap-mode
                :ensure t
                :config
+               (setq dap-auto-configure-features '(sessions locals controls tooltip)))
                (require 'dap-python)
-               (dap-mode 1)
-               (dap-ui-mode 1)
-               (dap-tooltip-mode 1)
-               (tooltip-mode 1)
-               (add-hook 'dap-stopped-hook
-                     (lambda (arg) (call-interactively #'dap-hydra))))
-          (setq dap-python-terminal "iterm ")
+             ;;  (dap-mode 1)
+             ;;  (dap-ui-mode 1)
+             ;;  (dap-tooltip-mode 1)
+             ;;  (tooltip-mode 1)
+             ;;  (add-hook 'dap-stopped-hook
+             ;;            (lambda (arg) (call-interactively #'dap-hydra))))
+             ;;(setq dap-python-terminal "iterm ")
 #+END_SRC
 
 *** emacs-lisp
@@ -1136,15 +1146,14 @@ I needed to do some shenanigans to get great auto-completion but here goes.
   (add-hook 'lua-mode-hook 'auto-complete-mode)
 
   ;;; I don't even know all the functionality
-  (use-package love-minor-mode
-    :ensure t
-    :config
-    (add-hook 'lua-mode-hook 'love-minor-mode))
+  ;;(use-package love-minor-mode
+  ;;  :ensure t
+  ;;  :config
+  ;;  (add-hook 'lua-mode-hook 'love-minor-mode))
 
   ;;; behold, perfection :°)
-  (global-set-key (kbd "<f9>") '(lambda () (interactive) (start-process "love-play-game" nil "love" default-directory)))
+  ;; (global-set-key (kbd "<f9>") '(lambda () (interactive) (start-process "love-play-game" nil "love" default-directory)))
 #+END_SRC
-<<<<<<< HEAD
 ** Jupyter integration
 The emacs-jupyter module seems to be the most complete and recent.
 #+BEGIN_SRC emacs-lisp
@@ -1387,8 +1396,7 @@ This is to drag-n-drop images from various sources to org files
     :config
     (add-hook 'dired-mode-hook 'org-download-enable))
 #+END_SRC
-* 
-Presentations
+* Presentations
 #+begin_src emacs-lisp 
   (use-package ox-reveal
   :ensure t)
@@ -1476,6 +1484,20 @@ Some of the most common Apple key bindings
 (global-set-key (kbd "M-/") 'vr/replace)
 
 #+END_SRC
+* My keyboard macros
+#+begin_src emacs-lisp
+;; jump to next narrowed subtree in org-mode
+(fset 'next-subtree-narrowed
+   (kmacro-lambda-form [?\C-x ?n ?w ?\C-c ?\C-f ?\C-x ?n ?s tab] 0 "%d"))
+(global-set-key (kbd "C-x n f") 'next-subtree-narrowed)
+
+;; jump to previous narrowed subtree in org-mode
+(fset 'prev-subtree-narrowed
+   (kmacro-lambda-form [?\C-x ?n ?w ?\C-c ?\C-b ?\C-x ?n ?s tab] 0 "%d"))
+(global-set-key (kbd "C-x n b") 'prev-subtree-narrowed)
+
+#+end_src
+
 * Start the Emacs server
 To enable the possibility to open files from command line (as well remote) in a single emacs instance, we need to start the server process.
 #+BEGIN_SRC emacs-lisp
